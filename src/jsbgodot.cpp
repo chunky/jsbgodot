@@ -65,8 +65,8 @@ void JSBGodot::initialise_loc() {
     Propagate->SetLongitude(0.0);
     Propagate->SetLatitude(0.0);
     Propagate->SetAltitudeASLmeters(9150);
-    JSBSim::FGInitialCondition initial_cond;
-    Propagate->SetInitialState()
+//    JSBSim::FGInitialCondition initial_cond;
+//    Propagate->SetInitialState()
 //    FDMExec->DoTrim(0);
 }
 
