@@ -4,8 +4,10 @@
 #include <unistd.h>
 #include "models/FGFCS.h"
 #include "models/FGAircraft.h"
+#include "initialization/FGInitialCondition.h"
 #include "models/FGPropulsion.h"
-
+#include <stdlib.h>
+#include <initialization/FGTrim.h>
 /**
  * Simple script to connect JSBSim to a Godot 3D Spatial body
  *
@@ -34,6 +36,7 @@ JSBGodot::~JSBGodot() {
 }
 
 void JSBGodot::_init() {
+    //setenv("JSBSIM_DEBUG", "2", 1);
     FDMExec = new JSBSim::FGFDMExec();
     char cwd[1024];
     char *thing = getcwd(cwd, 1024);
@@ -42,32 +45,33 @@ void JSBGodot::_init() {
     FDMExec->SetAircraftPath(SGPath("aircraft"));
     FDMExec->SetEnginePath(SGPath("engine"));
     FDMExec->SetSystemsPath(SGPath("systems"));
-    do_scripted = true;
+    do_scripted = false;
     if (do_scripted) {
         FDMExec->LoadScript(SGPath("scripts/Short_S23_4.xml"));
+        FDMExec->RunIC();
     } else {
         FDMExec->LoadModel(SGPath("aircraft"),
                            SGPath("engine"),
                            SGPath("systems"),
-                           "C130");
-        initialise_loc();
+                           "x24b");
+//        initialise();
+        FDMExec->GetIC()->Load(SGPath("reset00.xml"));
         copy_inputs_to_JSBSim();
+
+        FDMExec->RunIC();
+//        FDMExec->DoTrim(JSBSim::tFull);
     }
 //    std::shared_ptr<JSBSim::FGAircraft> ac = FDMExec->GetAircraft();
 //    std::shared_ptr<JSBSim::FGPropulsion> prop = FDMExec->GetPropulsion();
 //    std::shared_ptr<JSBSim::FGEngine> engine = prop->GetEngine(-1);
-    FDMExec->RunIC();
-//    FDMExec->DoTrim((JSBSim::TrimMode));
 }
 
-void JSBGodot::initialise_loc() {
-    std::shared_ptr<JSBSim::FGPropagate> Propagate = FDMExec->GetPropagate();
-    Propagate->SetLongitude(0.0);
-    Propagate->SetLatitude(0.0);
-    Propagate->SetAltitudeASLmeters(9150);
-//    JSBSim::FGInitialCondition initial_cond;
-//    Propagate->SetInitialState()
-//    FDMExec->DoTrim(0);
+void JSBGodot::initialise() {
+    std::shared_ptr<JSBSim::FGInitialCondition> ic = FDMExec->GetIC();
+    ic->SetLatitudeDegIC(0.0);
+    ic->SetLongitudeDegIC(0.0);
+    ic->SetAltitudeASLFtIC(10000);
+    ic->SetMachIC(0.3);
 }
 
 void JSBGodot::copy_inputs_to_JSBSim() {
@@ -94,8 +98,8 @@ void JSBGodot::copy_outputs_from_JSBSim() {
     float latitude = Propagate->GetLocation().GetLatitudeDeg();
     float longitude = Propagate->GetLocation().GetLongitudeDeg();
 
-    float bank = Propagate->GetEuler(JSBSim::FGForce::ePhi) * -1.0;
-    float pitch = Propagate->GetEuler(JSBSim::FGForce::eTht) * -1.0;
+    float bank = Propagate->GetEuler(JSBSim::FGForce::ePhi);
+    float pitch = Propagate->GetEuler(JSBSim::FGForce::eTht);
     float heading = Propagate->GetEuler(JSBSim::FGForce::ePsi);
 
     Vector3 newRot = Vector3(pitch, heading, bank);

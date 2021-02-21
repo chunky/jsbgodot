@@ -39,7 +39,7 @@ public:
 
     void _physics_process(const real_t delta);
 
-    void initialise_loc();
+    void initialise();
 };
 
 }
