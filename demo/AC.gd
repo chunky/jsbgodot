@@ -15,6 +15,13 @@ func _input(event):
 		$JSBSimSpatial.input_pitch = 1
 	else:
 		$JSBSimSpatial.input_pitch = 0
+		
+	if event is InputEventKey:
+		if event.scancode == KEY_A:
+			$JSBSimSpatial.input_throttle += 0.1
+		elif event.scancode == KEY_Z:
+			$JSBSimSpatial.input_throttle -= 0.1
+		$JSBSimSpatial.input_throttle = clamp($JSBSimSpatial.input_throttle, 0.0, 1.0)
 
 
 # Called when the node enters the scene tree for the first time.
