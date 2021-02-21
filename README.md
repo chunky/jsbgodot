@@ -10,15 +10,27 @@ Godot is open source, and JSBSim is open source. The rest is history
 ## Building
 
 * Make sure to clone with submodules
+```script
+git clone this_repo jsbgodot
+cd jsbgodot
+git submodule update --init --recursive
+```
 * Build JSBSim
 ```script
 cd jsbsim
 cmake .
 make
 ```
+* Build Godot Bindings
+```script
+cd godot-cpp
+# Replace <platform> with your platform
+scons platform=<platform> generate_bindings=yes -j4
+```
 * Build this
 ```script
-scons
+# Replace <platform> with your platform. Defaults to Linux
+scons platform=<platform>
 ```
 
 Gary <chunky@icculus.org>
