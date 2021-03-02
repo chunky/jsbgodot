@@ -22,6 +22,9 @@ func _input(event):
 		elif event.scancode == KEY_Z:
 			$JSBSimSpatial.input_throttle -= 0.1
 		$JSBSimSpatial.input_throttle = clamp($JSBSimSpatial.input_throttle, 0.0, 1.0)
+		
+		if event.scancode == KEY_ESCAPE:
+			get_tree().quit(0)
 
 
 # Called when the node enters the scene tree for the first time.
