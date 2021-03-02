@@ -101,6 +101,8 @@ cpp_library += '.' + str(bits)
 env.Append(CPPPATH=['.', godot_headers_path, jsb_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
 env.Append(LIBPATH=[cpp_bindings_path + 'bin/', jsb_library_path1, jsb_library_path2])
 env.Append(LIBS=[cpp_library, jsb_library])
+env.Append(CCFLAGS=['-I/usr/include/gdal'])
+env.Append(LIBS=['gdal'])
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['src/'])
