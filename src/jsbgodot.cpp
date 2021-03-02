@@ -110,7 +110,7 @@ void JSBGodot::copy_outputs_from_JSBSim() {
     float z = latitude;
     Vector3 newPos = Vector3(x, y, z);
     set_translation(newPos);
-    printf("LLA: %f,%f,%f\n", latitude, longitude, altitude);
+// printf("LLA: %f,%f,%f\n", latitude, longitude, altitude);
 }
 
 void JSBGodot::_input(const Ref<InputEvent> event) {
