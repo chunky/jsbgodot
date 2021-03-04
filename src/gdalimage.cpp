@@ -36,7 +36,7 @@ void GDALImage::_init() {
 }
 
 Ref<Image> GDALImage::create_image(float lat_dd_d, float lon_dd_l,
-    float lat_dd_u, float lon_dd_r) {
+    float lat_dd_u, float lon_dd_r, int img_px_x, int img_px_y) {
     
     GDALRasterBand *band = poDataset->GetRasterBand(1);
     
@@ -56,19 +56,19 @@ Ref<Image> GDALImage::create_image(float lat_dd_d, float lon_dd_l,
     int y_off = -(data_min_lat - lat_dd_d) / lat_deg_per_px;
     
     // printf(" %f,%f -> %f,%f => %d x %d + %d + %d px\n", lat_dd_d, lon_dd_l, lat_dd_u, lon_dd_r, x_pixels, y_pixels, x_off, y_off);
-    float *scanline = (float *) CPLMalloc(x_pixels * y_pixels * sizeof(float));
+    float *scanline = (float *) CPLMalloc(img_px_x * img_px_y * sizeof(float));
     
     // FILE * f = fopen("../terr_test.csv", "w");
     
     CPLErr err = band->RasterIO(GF_Read, x_off, y_off, x_pixels, y_pixels,
-            scanline, x_pixels, y_pixels, GDT_Float32, 0, 0);
+            scanline, img_px_x, img_px_y, GDT_Float32, 0, 0);
     Image * im = Image::_new();
-    im->create(x_pixels, y_pixels, false, Image::FORMAT_RGB8);
+    im->create(img_px_x, img_px_x, false, Image::FORMAT_RGB8);
     im->lock();
     int positive_height = 0;
     int total_px = 0;
-    for(int x = 0; x < x_pixels; x++) {
-        for(int y = 0; y < y_pixels; y++) {
+    for(int x = 0; x < img_px_x; x++) {
+        for(int y = 0; y < img_px_x; y++) {
             float height = scanline[x + y * x_pixels];
             if(height < -32760.0) { // "Missing" in DTED
                 height = 0; // Assume we have the whole world, and "missing" means "water"
@@ -78,8 +78,11 @@ Ref<Image> GDALImage::create_image(float lat_dd_d, float lon_dd_l,
                 positive_height++;
             }
             // fprintf(f, "%f,", height);
-            double max_height = 1000;
+            double max_height = 10000;
             double q = height / max_height;
+            if(q > 1.0) {
+                q = 1.0;
+            }
             Color col = Color(q, q, q);
             im->set_pixel(x, y, col);
         }

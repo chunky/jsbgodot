@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+
+uniform sampler2D tex;
+
+void vertex() {
+  VERTEX.y += texture(tex, VERTEX.xz).g*10.0;
+}
+"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+
+[sub_resource type="PlaneMesh" id=3]
+material = SubResource( 2 )
+subdivide_width = 20
+subdivide_depth = 20
+
+[node name="TerrainTile" type="MeshInstance"]
+mesh = SubResource( 3 )
+material/0 = null

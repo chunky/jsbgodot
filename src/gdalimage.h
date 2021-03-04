@@ -26,7 +26,7 @@ public:
     void _init();
 
     Ref<Image> create_image(float lat_dd_u, float lat_dd_d,
-        float lon_dd_l,float lon_dd_r);
+        float lon_dd_l,float lon_dd_r, int img_px_x, int img_px_y);
 
 };
 
