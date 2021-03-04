@@ -1,1 +1,9 @@
 src/*.os
+CMake*
+demo/bin/x11
+demo/.import
+demo/*.import
+.sconsign.dblite
+.idea
+nbproject
+
