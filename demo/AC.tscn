@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://bin/jsbgodot.gdns" type="Script" id=1]
-[ext_resource path="res://Timer.gd" type="Script" id=2]
 [ext_resource path="res://AC.gd" type="Script" id=3]
 
 [sub_resource type="CapsuleMesh" id=1]
@@ -29,8 +28,3 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.37414, 1.81884 )
 light_color = Color( 0.215686, 0.25098, 0.45098, 1 )
 light_energy = 100.0
 omni_range = 50.0
-
-[node name="Timer" type="Timer" parent="JSBSimSpatial"]
-autostart = true
-script = ExtResource( 2 )
-[connection signal="timeout" from="JSBSimSpatial/Timer" to="JSBSimSpatial/Timer" method="_on_Timer_timeout"]
